@@ -1,0 +1,23 @@
+{
+  "name": "elastic-textarea",
+  "version": "1.0.0",
+  "description": "A web component for progressively-enhanced auto-expanding textareas",
+  "main": "index.js",
+  "scripts": {
+    "start": "browser-sync --files *",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudfour/elastic-textarea.git"
+  },
+  "author": "Cloud Four",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cloudfour/elastic-textarea/issues"
+  },
+  "homepage": "https://github.com/cloudfour/elastic-textarea#readme",
+  "devDependencies": {
+    "browser-sync": "^2.27.9"
+  }
+}
