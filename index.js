@@ -7,6 +7,7 @@ customElements.define(
           "data-min-rows",
           textareaEl.getAttribute("rows") || 2
         );
+
         this.update(textareaEl);
       });
 
@@ -14,20 +15,21 @@ customElements.define(
       this.addEventListener("input", ({ target }) => {
         if (!target instanceof HTMLTextAreaElement) return;
 
-        this.update(textareaEl);
+        this.update(target);
       });
     }
 
     isScrolling(textareaEl) {
-      textareaEl.scrollHeight > textareaEl.clientHeight;
+      return textareaEl.scrollHeight > textareaEl.clientHeight;
     }
 
     /** Grow until the textarea stops scrolling */
     grow(textareaEl) {
       // Store initial height of textarea
       let previousHeight = textareaEl.clientHeight;
+      let rows = this.rows(textareaEl);
 
-      while (isScrolling(textareaEl)) {
+      while (this.isScrolling(textareaEl)) {
         rows++;
         textareaEl.setAttribute("rows", String(rows));
 
@@ -44,25 +46,30 @@ customElements.define(
     }
 
     /** Shrink until the textarea matches the minimum rows or starts scrolling */
-    shrink() {
+    shrink(textareaEl) {
       const minRows = textareaEl.getAttribute("data-min-rows");
-      while (!isScrolling(textareaEl) && rows > minRows) {
+      let rows = this.rows(textareaEl);
+      while (!this.isScrolling(textareaEl) && rows > minRows) {
         rows--;
         textareaEl.setAttribute("rows", String(Math.max(rows, minRows)));
 
-        if (isScrolling(textareaEl)) {
-          grow(textareaEl);
+        if (this.isScrolling(textareaEl)) {
+          this.grow(textareaEl);
           break;
         }
       }
     }
 
-    update() {
-      if (isScrolling(textareaEl)) {
-        grow(textareaEl);
+    update(textareaEl) {
+      if (this.isScrolling(textareaEl)) {
+        this.grow(textareaEl);
       } else {
-        shrink(textareaEl);
+        this.shrink(textareaEl);
       }
+    }
+
+    rows(textareaEl) {
+      return textareaEl.getAttribute("rows") || textareaEl.dataset.minRows;
     }
   }
 );
