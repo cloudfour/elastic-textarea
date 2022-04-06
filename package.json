@@ -1,12 +1,19 @@
 {
-  "name": "elastic-textarea",
-  "version": "1.0.0",
+  "name": "@cloudfour/elastic-textarea",
+  "version": "0.0.1",
   "description": "A web component for progressively-enhanced auto-expanding textareas",
   "main": "index.js",
   "scripts": {
     "start": "browser-sync start --server --files *",
     "test": "npx jest --testTimeout=10000",
-    "test:watch": "npx jest --testTimeout=10000 --watch"
+    "test:watch": "npx jest --testTimeout=10000 --watch",
+    "build": "run-s build:*",
+    "build:minify": "minify index.js > index.min.js",
+    "document": "run-p document:*",
+    "document:json": "wca analyze index.js --outFile manifests/manifest.json",
+    "document:vscode": "wca analyze index.js --format vscode --outFile manifests/manifest-vscode.json",
+    "document:md": "wca analyze index.js --outFile manifests/manifest.md",
+    "prepare": "run-p build document"
   },
   "repository": {
     "type": "git",
@@ -21,6 +28,11 @@
   "devDependencies": {
     "browser-sync": "^2.27.9",
     "jest": "^27.5.1",
-    "pleasantest": "^2.0.0"
+    "minify": "^8.0.4",
+    "pleasantest": "^2.0.0",
+    "web-component-analyzer": "^2.0.0-next.4"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }
