@@ -4,6 +4,8 @@ _A web component for progressively-enhanced auto-expanding textareas._
 
 This web component progressively enhances the native textarea: as a user types in the textarea, its height increases so that its content is never clipped. When the user deletes content in the textarea it shrinks back down to a minimum number of rows.
 
+![A gif of an textarea expanding and shrinking as a user types and deletes content.](/elastic-textarea.gif)
+
 ## Installation
 
 ### NPM
@@ -25,7 +27,7 @@ import "@cloudfour/elastic-textarea";
 Alternately, you can load the script via CDN:
 
 ```html
-<script type="module" src="https://unpkg.com/browse/@cloudfour/elastic-textarea/index..min.js">
+<script type="module" src="https://unpkg.com/@cloudfour/elastic-textarea@0.0.1/index.min.js">
 ```
 
 ## Usage
