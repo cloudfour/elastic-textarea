@@ -1,6 +1,6 @@
 {
   "name": "@cloudfour/elastic-textarea",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A web component for progressively-enhanced auto-expanding textareas",
   "main": "index.js",
   "scripts": {
