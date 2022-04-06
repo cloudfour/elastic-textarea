@@ -1,8 +1,13 @@
 {
   "name": "@cloudfour/elastic-textarea",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A web component for progressively-enhanced auto-expanding textareas",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "index.min.js",
+    "manifests"
+  ],
   "scripts": {
     "start": "browser-sync start --server --files *",
     "test": "npx jest --testTimeout=10000",
