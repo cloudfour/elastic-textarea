@@ -27,7 +27,10 @@ import "@cloudfour/elastic-textarea";
 Alternately, you can load the script via CDN:
 
 ```html
-<script type="module" src="https://unpkg.com/@cloudfour/elastic-textarea/index.min.js">
+<script
+  type="module"
+  src="https://unpkg.com/@cloudfour/elastic-textarea/index.min.js"
+></script>
 ```
 
 ## Usage
