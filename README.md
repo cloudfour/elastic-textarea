@@ -6,6 +6,8 @@ This web component progressively enhances the native textarea: as a user types i
 
 ![A gif of an textarea expanding and shrinking as a user types and deletes content.](/elastic-textarea.gif)
 
+(Note: if a user manually resizes a textarea it will no longer be elastic.)
+
 ## Installation
 
 ### NPM
