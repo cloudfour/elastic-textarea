@@ -19,9 +19,5 @@ jobs:
           cache: "npm"
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
-      - name: Run build 🏗
-        run: npm run build
-      - name: Run documenation 📚
-        run: npm run document
       - name: Run tests 🧪
         run: npm test
