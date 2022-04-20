@@ -57,8 +57,9 @@ customElements.define(
       // Store initial height of textarea
       let previousHeight = textareaEl.clientHeight;
 
-      const minRows = textareaEl.getAttribute("data-min-rows");
+      const minRows = parseInt(textareaEl.getAttribute("data-min-rows"));
       let rows = this.rows(textareaEl);
+
       while (!this.isScrolling(textareaEl) && rows > minRows) {
         rows--;
         textareaEl.setAttribute("rows", String(Math.max(rows, minRows)));
@@ -87,7 +88,9 @@ customElements.define(
     }
 
     rows(textareaEl) {
-      return textareaEl.getAttribute("rows") || textareaEl.dataset.minRows;
+      return parseInt(
+        textareaEl.getAttribute("rows") || textareaEl.dataset.minRows
+      );
     }
   }
 );

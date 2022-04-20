@@ -109,3 +109,30 @@ test(
     await expect(textarea2).toHaveAttribute("rows", "3");
   })
 );
+
+test(
+  "Still shrinks when over 10 rows",
+  withBrowser(async ({ utils, screen, user }) => {
+    await utils.injectHTML(`
+      <elastic-textarea>
+        <textarea></textarea>
+      </elastic-textarea>
+    `);
+    const textarea = await screen.getByRole("textbox");
+    await initTextareaJS(utils);
+
+    textarea.evaluate((el) => (el.style.width = "500px"));
+
+    // This wraps, so both lines should be full now
+    await user.type(
+      textarea,
+      "{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}"
+    );
+    // 2 rows is the default, so we don't need a rows attribute
+    await expect(textarea).toHaveAttribute("rows", "11");
+
+    // After emptying it out, it should have 2 rows, since that is the default
+    await user.clear(textarea);
+    await expect(textarea).toHaveAttribute("rows", "2");
+  })
+);
