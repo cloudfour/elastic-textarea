@@ -1,5 +1,8 @@
 # Elastic Textarea
 
+[![NPM version](http://img.shields.io/npm/v/@cloudfour/elastic-textarea.svg)](https://www.npmjs.org/package/@cloudfour/elastic-textarea) [![Build Status](https://github.com/cloudfour/elastic-textarea/workflows/CI/badge.svg)](https://github.com/cloudfour/elastic-textarea/actions?query=workflow%3ACI) [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
+
+
 _A web component for progressively-enhanced auto-expanding textareas._
 
 This web component progressively enhances the native textarea: as a user types in the textarea, its height increases so that its content is never clipped. When the user deletes content in the textarea it shrinks back down to a minimum number of rows.
