@@ -6,16 +6,13 @@ customElements.define(
        * Find all inner textareas and use their rows attributes as a minimum count
        */
       [...this.querySelectorAll("textarea")].forEach((textareaEl) => {
-        textareaEl.setAttribute(
-          "data-min-rows",
-          textareaEl.getAttribute("rows") || 2
-        );
+        textareaEl.dataset.minRows = textareaEl.rows || 2;
 
         // If textareas are prefilled they may need to be resized
         this.update(textareaEl);
       });
 
-      // Use event delegation to listent for textarea inputs and update the areas
+      // Use event delegation to listen for textarea inputs and update the areas
       this.addEventListener("input", ({ target }) => {
         if (!(target instanceof HTMLTextAreaElement)) return;
 
@@ -38,7 +35,7 @@ customElements.define(
 
       while (this.isScrolling(textareaEl)) {
         rows++;
-        textareaEl.setAttribute("rows", String(rows));
+        textareaEl.rows = rows;
 
         // Get height after rows change is made
         const newHeight = textareaEl.clientHeight;
@@ -57,12 +54,12 @@ customElements.define(
       // Store initial height of textarea
       let previousHeight = textareaEl.clientHeight;
 
-      const minRows = parseInt(textareaEl.getAttribute("data-min-rows"));
+      const minRows = parseInt(textareaEl.dataset.minRows);
       let rows = this.rows(textareaEl);
 
       while (!this.isScrolling(textareaEl) && rows > minRows) {
         rows--;
-        textareaEl.setAttribute("rows", String(Math.max(rows, minRows)));
+        textareaEl.rows = Math.max(rows, minRows);
 
         // Get height after rows change is made
         const newHeight = textareaEl.clientHeight;
@@ -88,9 +85,7 @@ customElements.define(
     }
 
     rows(textareaEl) {
-      return parseInt(
-        textareaEl.getAttribute("rows") || textareaEl.dataset.minRows
-      );
+      return textareaEl.rows || parseInt(textareaEl.dataset.minRows);
     }
   }
 );
