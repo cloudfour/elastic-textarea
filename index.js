@@ -17,7 +17,7 @@ customElements.define(
 
       // Use event delegation to listent for textarea inputs and update the areas
       this.addEventListener("input", ({ target }) => {
-        if (!target instanceof HTMLTextAreaElement) return;
+        if (!(target instanceof HTMLTextAreaElement)) return;
 
         this.update(target);
       });
