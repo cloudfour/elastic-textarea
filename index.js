@@ -85,7 +85,7 @@ customElements.define(
     }
 
     rows(textareaEl) {
-      return textareaEl.rows || textareaEl.dataset.minRows;
+      return textareaEl.rows || parseInt(textareaEl.dataset.minRows);
     }
   }
 );
