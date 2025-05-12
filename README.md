@@ -67,3 +67,7 @@ If multiple `textarea` elements are wrapped in an `elastic-textarea` they will a
   </label>
 </elastic-textarea>
 ```
+
+## CSS-Only Alternative
+
+You may consider using `field-sizing: content` as a CSS-only alternate solution. [MDN says](https://developer.mozilla.org/en-US/docs/Web/CSS/field-sizing) "`field-sizing: content` overrides the default preferred sizing of form elements. This setting provides an easy way to configure text inputs to shrinkwrap their content and grow as more text is entered." As of May 2025, this is [only supported in Chromium browsers](https://caniuse.com/mdn-css_properties_field-sizing_content), but it's worth considering as a progressive enhancement if you don't need full cross-browser support.
