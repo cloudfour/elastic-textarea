@@ -33,7 +33,7 @@
   "devDependencies": {
     "browser-sync": "3.0.4",
     "jest": "30.3.0",
-    "minify": "15.2.0",
+    "minify": "15.2.1",
     "npm-run-all2": "8.0.4",
     "pleasantest": "5.0.0",
     "web-component-analyzer": "2.0.0"
