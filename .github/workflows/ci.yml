@@ -9,6 +9,9 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    # The suite finishes in seconds. A cap keeps a hung browser from burning
+    # Action minutes up to GitHub's six hour default, as happened in #79.
+    timeout-minutes: 10
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@v7.0.1
@@ -19,6 +22,7 @@ jobs:
           cache: "npm"
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
-      # Commenting out because tests are taking 6 hours!
-      # - name: Run tests 🧪
-      #   run: npm test
+      - name: Install Chromium 🌐
+        run: npx playwright install --with-deps chromium
+      - name: Run tests 🧪
+        run: npm test

@@ -1,138 +1,122 @@
-// If you want to use module imports you’ll need to configure
-//  Jest and Babel to use ESM
-// See https://jestjs.io/docs/getting-started#using-babel
-const { withBrowser } = require("pleasantest");
+import { afterEach, beforeEach, expect, test } from "vitest";
+import { page, userEvent } from "vitest/browser";
 
-const initTextareaJS = (utils) => utils.runJS(`import './index.js'`);
+// Importing the component registers <elastic-textarea> for the whole file.
+// Registration is global and one-time, so markup added below is upgraded
+// (and therefore resized) the moment it is inserted into the document.
+import "./index.js";
 
-test(
-  "Resizes correctly with no rows attribute",
-  withBrowser(async ({ utils, screen, user }) => {
-    await utils.injectHTML(`
-      <elastic-textarea>
-        <textarea></textarea>
-      </elastic-textarea>
-    `);
-    const textarea = await screen.getByRole("textbox");
-    await initTextareaJS(utils);
+// A fixed width plus a monospace font makes wrapping deterministic: roughly 52
+// characters fit on a line, so the tests can rely on exact row counts instead
+// of on whatever font the browser happens to default to.
+const style = "width: 500px; font: 16px monospace;";
 
-    textarea.evaluate((el) => (el.style.width = "500px"));
+let container;
 
-    // Default of 2 rows
-    await expect(textarea).toHaveAttribute("data-min-rows", "2");
+beforeEach(() => {
+  container = document.createElement("div");
+  document.body.append(container);
+});
 
-    // This wraps, so both lines should be full now
-    await user.type(
-      textarea,
-      "this is a very long sentence with a lot of words that make it wrap"
-    );
-    // 2 rows is the default, so we don't need a rows attribute
-    await expect(textarea).not.toHaveAttribute("rows");
+afterEach(() => {
+  container.remove();
+});
 
-    // Enter is pressed, so now there should be 3 lines (this line doesn't wrap)
-    await user.type(textarea, "{enter}this is a very long sentence with a lot");
-    await expect(textarea).toHaveAttribute("rows", "3");
+test("Resizes correctly with no rows attribute", async () => {
+  container.innerHTML = `
+    <elastic-textarea>
+      <textarea style="${style}"></textarea>
+    </elastic-textarea>
+  `;
+  const textarea = page.getByRole("textbox");
 
-    // After emptying it out, it should have 2 rows, since that is the default
-    await user.clear(textarea);
-    await expect(textarea).toHaveAttribute("rows", "2");
-  })
-);
+  // Default of 2 rows
+  await expect.element(textarea).toHaveAttribute("data-min-rows", "2");
 
-test(
-  "Allows you to override the minimum number of rows",
-  withBrowser(async ({ utils, screen, user }) => {
-    await utils.injectHTML(`
-      <elastic-textarea>
-        <textarea rows="1"></textarea>
-      </elastic-textarea>
-    `);
-    const textarea = await screen.getByRole("textbox");
-    await initTextareaJS(utils);
-    await textarea.evaluate((el) => (el.style.width = "500px"));
+  // This wraps, so both lines should be full now
+  await userEvent.type(
+    textarea,
+    "this is a very long sentence with a lot of words that make it wrap"
+  );
+  // 2 rows is the default, so we don't need a rows attribute
+  await expect.element(textarea).not.toHaveAttribute("rows");
 
-    // Starts at 1 row since we set rows attribute
-    await expect(textarea).toHaveAttribute("rows", "1");
+  // Enter is pressed, so now there should be 3 lines (this line doesn't wrap)
+  await userEvent.type(
+    textarea,
+    "{Enter}this is a very long sentence with a lot"
+  );
+  await expect.element(textarea).toHaveAttribute("rows", "3");
 
-    await user.type(textarea, "I have {enter}{enter}{enter} a long message");
-    await expect(textarea).toHaveAttribute("rows", "4");
+  // After emptying it out, it should have 2 rows, since that is the default
+  await userEvent.clear(textarea);
+  await expect.element(textarea).toHaveAttribute("rows", "2");
+});
 
-    // After emptying it out, it should have 1 row, since that is what we initialized `rows` to
-    await user.clear(textarea);
-    await expect(textarea).toHaveAttribute("rows", "1");
-  })
-);
+test("Allows you to override the minimum number of rows", async () => {
+  container.innerHTML = `
+    <elastic-textarea>
+      <textarea rows="1" style="${style}"></textarea>
+    </elastic-textarea>
+  `;
+  const textarea = page.getByRole("textbox");
 
-test(
-  "Resizes on initial load",
-  withBrowser(async ({ utils, screen, user }) => {
-    await utils.injectHTML(`
-      <elastic-textarea>
-        <textarea>
-        I have
-        
-        
-        
-        a long message
-        </textarea>
-      </elastic-textarea>
-    `);
-    const textarea = await screen.getByRole("textbox");
-    textarea.evaluate((el) => (el.style.width = "500px"));
+  // Starts at 1 row since we set rows attribute
+  await expect.element(textarea).toHaveAttribute("rows", "1");
 
-    await initTextareaJS(utils);
+  await userEvent.type(textarea, "I have {Enter}{Enter}{Enter} a long message");
+  await expect.element(textarea).toHaveAttribute("rows", "4");
 
-    await expect(textarea).toHaveAttribute("rows", "6");
-  })
-);
+  // After emptying it out, it should have 1 row, since that is what we initialized `rows` to
+  await userEvent.clear(textarea);
+  await expect.element(textarea).toHaveAttribute("rows", "1");
+});
 
-test(
-  "Supports multiple textareas",
-  withBrowser(async ({ utils, screen, user }) => {
-    await utils.injectHTML(`
-      <elastic-textarea>
-        <textarea name="textarea-1" aria-label="textarea-1"></textarea>
-        <textarea name="textarea-2" aria-label="textarea-2"></textarea>
-      </elastic-textarea>
-    `);
-    const textarea1 = await screen.getByRole("textbox", { name: "textarea-1" });
-    const textarea2 = await screen.getByRole("textbox", { name: "textarea-2" });
-    textarea1.evaluate((el) => (el.style.width = "500px"));
-    textarea2.evaluate((el) => (el.style.width = "500px"));
+test("Resizes on initial load", async () => {
+  // Six lines of prefilled content, so the component has to resize during
+  // `connectedCallback` rather than in response to an `input` event.
+  container.innerHTML = `
+    <elastic-textarea>
+      <textarea style="${style}">I have\n\n\n\n\na long message</textarea>
+    </elastic-textarea>
+  `;
+  const textarea = page.getByRole("textbox");
 
-    await initTextareaJS(utils);
+  await expect.element(textarea).toHaveAttribute("rows", "6");
+});
 
-    await user.type(textarea1, "I have {enter}{enter}{enter} a long message");
-    await expect(textarea1).toHaveAttribute("rows", "4");
+test("Supports multiple textareas", async () => {
+  container.innerHTML = `
+    <elastic-textarea>
+      <textarea name="textarea-1" aria-label="textarea-1" style="${style}"></textarea>
+      <textarea name="textarea-2" aria-label="textarea-2" style="${style}"></textarea>
+    </elastic-textarea>
+  `;
+  const textarea1 = page.getByRole("textbox", { name: "textarea-1" });
+  const textarea2 = page.getByRole("textbox", { name: "textarea-2" });
 
-    await user.type(textarea2, "I have {enter}{enter} a medium message");
-    await expect(textarea2).toHaveAttribute("rows", "3");
-  })
-);
+  await userEvent.type(textarea1, "I have {Enter}{Enter}{Enter} a long message");
+  await expect.element(textarea1).toHaveAttribute("rows", "4");
 
-test(
-  "Still shrinks when over 10 rows",
-  withBrowser(async ({ utils, screen, user }) => {
-    await utils.injectHTML(`
-      <elastic-textarea>
-        <textarea></textarea>
-      </elastic-textarea>
-    `);
-    const textarea = await screen.getByRole("textbox");
-    await initTextareaJS(utils);
+  await userEvent.type(textarea2, "I have {Enter}{Enter} a medium message");
+  await expect.element(textarea2).toHaveAttribute("rows", "3");
+});
 
-    textarea.evaluate((el) => (el.style.width = "500px"));
+test("Still shrinks when over 10 rows", async () => {
+  container.innerHTML = `
+    <elastic-textarea>
+      <textarea style="${style}"></textarea>
+    </elastic-textarea>
+  `;
+  const textarea = page.getByRole("textbox");
 
-    // This wraps, so both lines should be full now
-    await user.type(
-      textarea,
-      "{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}{enter}"
-    );
-    // 2 rows is the default, so we don't need a rows attribute
-    await expect(textarea).toHaveAttribute("rows", "11");
+  await userEvent.type(
+    textarea,
+    "{Enter}{Enter}{Enter}{Enter}{Enter}{Enter}{Enter}{Enter}{Enter}{Enter}"
+  );
+  await expect.element(textarea).toHaveAttribute("rows", "11");
 
-    // After emptying it out, it should have 2 rows, since that is the default
-    await user.clear(textarea);
-    await expect(textarea).toHaveAttribute("rows", "2");
-  })
-);
+  // After emptying it out, it should have 2 rows, since that is the default
+  await userEvent.clear(textarea);
+  await expect.element(textarea).toHaveAttribute("rows", "2");
+});

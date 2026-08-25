@@ -29,6 +29,10 @@ coverage
 # nyc test coverage
 .nyc_output
 
+# Screenshots and attachments Vitest writes when a browser test fails
+__screenshots__
+.vitest-attachments
+
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
