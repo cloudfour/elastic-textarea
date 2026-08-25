@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "start": "browser-sync start --server --files *",
-    "test": "npx jest --testTimeout=10000",
-    "test:watch": "npx jest --testTimeout=10000 --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build": "run-s build:*",
     "build:minify": "minify index.js > index.min.js",
     "document": "run-p document:*",
@@ -31,11 +31,11 @@
   },
   "homepage": "https://github.com/cloudfour/elastic-textarea#readme",
   "devDependencies": {
+    "@vitest/browser-playwright": "4.1.11",
     "browser-sync": "3.0.4",
-    "jest": "30.4.2",
     "minify": "15.3.1",
     "npm-run-all2": "9.0.3",
-    "pleasantest": "5.0.0",
+    "vitest": "4.1.11",
     "web-component-analyzer": "2.0.0"
   },
   "dependencies": {}
