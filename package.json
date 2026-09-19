@@ -31,11 +31,11 @@
   },
   "homepage": "https://github.com/cloudfour/elastic-textarea#readme",
   "devDependencies": {
-    "@vitest/browser-playwright": "5.0.0",
+    "@vitest/browser-playwright": "5.0.1",
     "browser-sync": "3.0.4",
     "minify": "15.3.1",
     "npm-run-all2": "9.0.3",
-    "vitest": "5.0.0",
+    "vitest": "5.0.1",
     "web-component-analyzer": "2.0.0"
   },
   "dependencies": {}
